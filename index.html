@@ -226,6 +226,7 @@
                     <div class="input-group"><label>DEPARTURE CITY (INDIA)</label>
                         <select id="departureCitySelect" class="searchable-dropdown">
                             <option value="Port Blair">Select City</option>
+                            <option value="OTHERS">✏️ OTHERS (Enter manually)</option>
                             <option value="Port Blair">Port Blair</option>
                             <option value="Adoni">Adoni</option>
                             <option value="Amaravati">Amaravati</option>
@@ -771,6 +772,7 @@
 <option value="Jalpaiguri">Jalpaiguri</option>
 <option value="Kalimpong">Kalimpong</option>
 <option value="Kamarhati">Kamarhati</option>
+<option value="Bangalore">Bangalore</option>
 <option value="Kanchrapara">Kanchrapara</option>
 <option value="Kharagpur">Kharagpur</option>
 <option value="Krishnanagar">Krishnanagar</option>
@@ -786,6 +788,7 @@
 <option value="Serampore">Serampore</option>
 <option value="Siliguri">Siliguri</option>
 </select>
+  <input type="text" id="customDepartureCity" placeholder="Enter your departure city manually" style="display:none; margin-top:8px;">
 </div>
 
 <!-- PASSPORT VALIDITY -->
@@ -1160,7 +1163,25 @@ flatpickr("#flightArrivalDate", { dateFormat: "d M Y", minDate: "today" });
                 let depCity = $(this).val();
                 $('#flightDepartureCity').val(depCity ? depCity.toUpperCase() : '');
             });
+              $('#departureCitySelect').on('change', function() {
+        let selected = $(this).val();
+        if (selected === 'OTHERS') {
+            $('#customDepartureCity').show();
+            $('#flightDepartureCity').val('');
+        } else {
+            $('#customDepartureCity').hide();
+            if (selected) {
+                $('#flightDepartureCity').val(selected.toUpperCase());
+            }
+        }
+    });
 
+    $('#customDepartureCity').on('input', function() {
+        let customVal = $(this).val();
+        if (customVal) {
+            $('#flightDepartureCity').val(customVal.toUpperCase());
+        }
+    });
             function updateArrivalCity() {
                 let destinations = $('#destSelect').val();
                 let isMultiple = destinations && destinations.length > 1 && !destinations.includes('OTHERS');
