@@ -1422,10 +1422,14 @@ let budgetOfferedBy = $('#budgetOfferedBy').val();
 
 let budgetText = "";
 if (budgetOfferedBy === "CUSTOMER") {
-    budgetText = customerAmount ? `CUSTOMER BUDGET: ${customerCurrency} ${customerAmount} (${customerType === 'per_person' ? 'PER PERSON' : 'TOTAL BUDGET'})${flightIncluded ? ` | FLIGHT: ${flightIncluded.toUpperCase()}` : ''}` : "CUSTOMER BUDGET: NOT SPECIFIED";
+    let flightText = "";
+    if (flightIncluded === "Yes") flightText = " | FLIGHT: INCLUDED";
+    else if (flightIncluded === "No") flightText = " | FLIGHT: EXCLUDED";
+    else flightText = "";
+    budgetText = customerAmount ? `CUSTOMER BUDGET: ${customerCurrency} ${customerAmount} (${customerType === 'per_person' ? 'PER PERSON' : 'TOTAL BUDGET'})${flightText}` : "CUSTOMER BUDGET: NOT SPECIFIED";
 } else {
     let ourBudgetTotal = calculateOurBudget();
-    budgetText = ourBudgetTotal ? `💰 ALIKE ESTIMATED BUDGET: ₹ ${ourBudgetTotal.toLocaleString()} (FOR ${$('#adultCount').val()} ADULTS + ${$('#childCount').val() || 0} CHILDREN, ${$('#hotelStarSelect').val()})` : "💰 ALIKE BUDGET: CALCULATING...";
+    budgetText = ourBudgetTotal ? `ALIKE ESTIMATED BUDGET: ₹ ${ourBudgetTotal.toLocaleString()} (FOR ${$('#adultCount').val()} ADULTS + ${$('#childCount').val() || 0} CHILDREN, ${$('#hotelStarSelect').val()}) EXCLUDING FLIGHTS` : "💰 ALIKE BUDGET: CALCULATING...";
 }
 
 let budgetLine = budgetText;
@@ -1468,7 +1472,7 @@ let budgetLine = budgetText;
        `NUMBER OF NIGHTS & DAYS: ${nightsDays}\n` +
        `TRAVEL DATE (CONFIRM THE DAYS AND REASON): ${travelRange}${reasonAdd}\n` +
        `HOTEL STAR - PREFERRED NO. OF ROOMS: ${hotel}\n` +
-       `BUDGET (PER/PERSON+WITH FLIGHT OR WITHOUT FLIGHT): ${budgetLine}\n` +
+       `BUDGET: ${budgetLine}\n` +
        `FLIGHT BOOKED OR NOT: ${flightStat}\n` +
        `PASSPORT VALIDITY (6 MONTHS MIN): ${passport}\n` +
        `VISA: ${visa}\n` +
