@@ -111,6 +111,7 @@
                     <div class="input-group">
                         <label>DAYS OF TRIP</label>
                         <select id="daysSelect">
+                            <option> </option>
                             <option value="1">1 Day</option><option value="2">2 Days</option><option value="3">3 Days</option>
                             <option value="4">4 Days</option><option value="5">5 Days</option><option value="6">6 Days</option>
                             <option value="7">7 Days</option><option value="8">8 Days</option><option value="9">9 Days</option>
@@ -132,6 +133,7 @@
                     <div class="input-group">
                         <label>TRAVEL DATE CONFIRM?</label>
                         <select id="travelConfirmSelect">
+                            <option></option>
                             <option value="YES">YES (Confirmed)</option>
                             <option value="NO">NO (Tentative)</option>
                         </select>
@@ -149,6 +151,7 @@
                     <div class="row-2col">
                         <div class="input-group"><label>HOTEL STAR</label>
                             <select id="hotelStarSelect">
+                                <option> </option>
                                 <option value="3 Star" selected>3 Star</option>
                                 <option value="4 Star">4 Star</option>
                                 <option value="5 Star">5 Star</option>
@@ -156,6 +159,7 @@
                         </div>
                         <div class="input-group"><label>NUMBER OF ROOMS</label>
                             <select id="roomCountSelect">
+                                <option > </option>
                                 <option value="1">1 Room</option><option value="2">2 Rooms</option>
                                 <option value="3">3 Rooms</option><option value="4">4 Rooms</option>
                                 <option value="5">5 Rooms</option><option value="6">6 Rooms</option>
@@ -208,6 +212,15 @@
                             <div class="input-group"><label>BUDGET CURRENCY</label><select id="customerBudgetCurrency"><option value="₹">₹ INR</option><option value="$">$ USD</option><option value="€">€ EUR</option><option value="£">£ GBP</option><option value="AED">AED</option></select></div>
                         </div>
                     </div>
+                    <!-- BUDGET TYPE SELECTION -->
+<div class="input-group">
+    <label>BUDGET OFFERED BY</label>
+    <select id="budgetOfferedBy">
+        <option> </option>
+        <option value="CUSTOMER">CUSTOMER (Customer's proposed budget)</option>
+        <option value="ALIKE">ALIKE (Our estimated budget)</option>
+    </select>
+</div>
 
                     <!-- DEPARTURE CITY -->
                     <div class="input-group"><label>DEPARTURE CITY (INDIA)</label>
@@ -776,10 +789,10 @@
 </div>
 
 <!-- PASSPORT VALIDITY -->
-<div class="input-group"><label>PASSPORT VALIDITY (6 MONTHS MIN)</label><select id="passportValiditySelect"><option value="YES">YES</option><option value="NO">NO</option></select></div>
+<div class="input-group"><label>PASSPORT VALIDITY (6 MONTHS MIN)</label><select id="passportValiditySelect"><option></option><option value="YES">YES</option><option value="NO">NO</option></select></div>
 
 <!-- VISA STATUS -->
-<div class="input-group"><label>VISA STATUS</label><select id="visaStatusSelect"><option value="Yes available">Yes available</option><option value="No, have to arrange by ALIKE">No, have to arrange by ALIKE</option></select></div>
+<div class="input-group"><label>VISA STATUS</label><select id="visaStatusSelect"><option></option><option value="Yes available">Yes available</option><option value="No, have to arrange by ALIKE">No, have to arrange by ALIKE</option></select></div>
 
 <!-- FLIGHT STATUS -->
 <div class="input-group">
@@ -791,15 +804,22 @@
     </select>
 </div>
 
+<!-- Replace the flightBookedDetails div with this: -->
 <div id="flightBookedDetails" style="display:none;">
     <div class="input-group"><label>DEPARTURE CITY</label><input type="text" id="flightDepartureCity" readonly style="background:#f0f0f0;"><small class="hint">Auto-fetched from Departure City</small></div>
+    
+    <!-- DEPARTURE DATE & TIME -->
+    <div class="input-group">
+        <label>DEPARTURE DATE</label>
+        <input type="text" id="flightDepartDate" placeholder="Select departure date">
+    </div>
     <div class="row-2col">
         <div class="input-group">
             <label>DEPARTURE TIME</label>
             <div style="display: flex; gap: 8px;">
                 <select id="departHour" style="flex:1;"><option value="">HH</option><option>01</option><option>02</option><option>03</option><option>04</option><option>05</option><option>06</option><option>07</option><option>08</option><option>09</option><option>10</option><option>11</option><option>12</option></select>
                 <span>:</span>
-                <select id="departMinute" style="flex:1;">
+               <select id="departMinute" style="flex:1;">
                     <option value="">MM</option>
   <option>01</option>
   <option>02</option>
@@ -860,32 +880,39 @@
   <option>57</option>
   <option>58</option>
   <option>59</option>
-</select>
-<select id="departAMPM" style="flex:1;"><option value="">AM/PM</option><option value="AM">AM</option><option value="PM">PM</option></select>
-</div>
-</div>
-<div class="input-group">
-    <label>ARRIVAL TIME</label>
-                                <div style="display: flex; gap: 8px;">
-                                    <select id="arrivalHour" style="flex:1;"><option value="">HH</option><option>01</option><option>02</option><option>03</option><option>04</option><option>05</option><option>06</option><option>07</option><option>08</option><option>09</option><option>10</option><option>11</option><option>12</option></select>
-                                    <span>:</span>
-                                    <select id="arrivalMinute" style="flex:1;"> <option value="">MM</option>
-                                        <option>01</option>
-                                        <option>02</option>
-                                        <option>03</option>
-                                        <option>04</option>
-                                        <option>05</option>
-                                        <option>06</option>
-                                        <option>07</option>
-                                        <option>08</option>
-                                        <option>09</option>
-                                        <option>10</option>
-                                        <option>11</option>
-                                        <option>12</option>
-                                        <option>13</option>
-                                        <option>14</option>
-                                        <option>15</option>
-                                        <option>16</option>
+</select><select id="departAMPM" style="flex:1;"><option value="">AM/PM</option><option value="AM">AM</option><option value="PM">PM</option></select>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ARRIVAL DATE & TIME -->
+    <div class="input-group">
+        <label>ARRIVAL DATE</label>
+        <input type="text" id="flightArrivalDate" placeholder="Select arrival date">
+    </div>
+    <div class="row-2col">
+        <div class="input-group">
+            <label>ARRIVAL TIME</label>
+            <div style="display: flex; gap: 8px;">
+                <select id="arrivalHour" style="flex:1;"><option value="">HH</option><option>01</option><option>02</option><option>03</option><option>04</option><option>05</option><option>06</option><option>07</option><option>08</option><option>09</option><option>10</option><option>11</option><option>12</option></select>
+                <span>:</span>
+                <select id="arrivalMinute" style="flex:1;"> <option value="">MM</option>
+  <option>01</option>
+  <option>02</option>
+  <option>03</option>
+  <option>04</option>
+  <option>05</option>
+  <option>06</option>
+  <option>07</option>
+  <option>08</option>
+  <option>09</option>
+  <option>10</option>
+  <option>11</option>
+  <option>12</option>
+  <option>13</option>
+  <option>14</option>
+  <option>15</option>
+  <option>16</option>
   <option>17</option>
   <option>18</option>
   <option>19</option>
@@ -929,20 +956,20 @@
   <option>57</option>
   <option>58</option>
   <option>59</option></select>
-  <select id="arrivalAMPM" style="flex:1;"><option value="">AM/PM</option><option value="AM">AM</option><option value="PM">PM</option></select>
+                <select id="arrivalAMPM" style="flex:1;"><option value="">AM/PM</option><option value="AM">AM</option><option value="PM">PM</option></select>
+            </div>
+        </div>
+    </div>
+    
+    <div class="input-group" id="arrivalCityGroup" style="display:none;">
+        <label>ARRIVAL CITY (DESTINATION)</label>
+        <select id="flightArrivalCitySelect" class="searchable-dropdown"><option value="">Select Arrival Destination</option></select>
+    </div>
+    <div class="input-group" id="arrivalCityAuto" style="display:block;">
+        <label>ARRIVAL CITY (DESTINATION)</label>
+        <input type="text" id="flightArrivalCity" readonly style="background:#f0f0f0;">
+    </div>
 </div>
-</div>
-                        </div>
-                        <div class="input-group" id="arrivalCityGroup" style="display:none;">
-                            <label>ARRIVAL CITY (DESTINATION)</label>
-                            <select id="flightArrivalCitySelect" class="searchable-dropdown"><option value="">Select Arrival Destination</option></select>
-                            <small class="hint">Select which destination you're flying to (for multiple destinations)</small>
-                        </div>
-                        <div class="input-group" id="arrivalCityAuto" style="display:block;">
-                            <label>ARRIVAL CITY (DESTINATION)</label>
-                            <input type="text" id="flightArrivalCity" readonly style="background:#f0f0f0;">
-                        </div>
-                    </div>
                     
                     <div id="flightNotBookedDetails" style="display:none;">
                         <div class="input-group"><label>FLIGHT BOOKING TENTATIVE DATE</label><input type="text" id="flightBookingDate" placeholder="Select date"></div>
@@ -959,6 +986,7 @@
                     <!-- CALLBACK TIME -->
                     <div class="input-group"><label>CALLBACK TIME PREFERENCE BY TA</label>
                         <select id="callbackPreset">
+                            <option></option>
                             <option value="Available right now">Available right now (immediate callback)</option>
                             <option value="CUSTOM_TIME">Custom time (select hour & minute)</option>
                         </select>
@@ -969,7 +997,7 @@
                         </div>
                     </div>
 
-                    <div class="input-group"><label>INFORMED ABOUT WHATSAPP</label><select id="whatsappInformed"><option value="No">No</option><option value="Yes">Yes</option></select></div>
+                    <div class="input-group"><label>INFORMED ABOUT WHATSAPP</label><select id="whatsappInformed"><option></option><option value="No">No</option><option value="Yes">Yes</option></select></div>
 
                     <div class="button-group">
                         <button class="btn-generate" id="generateBtn">GENERATE NOTATION (ALL CAPS)</button>
@@ -1123,6 +1151,9 @@
             flatpickr("#tentativeStartPicker", { dateFormat: "d M Y", minDate: "today" });
             flatpickr("#bookByDatePicker", { dateFormat: "d M Y", minDate: "today", maxDate: new Date().fp_incr(14) });
             flatpickr("#flightBookingDate", { dateFormat: "d M Y", minDate: "today" });
+            // Add these to existing flatpickr initializations
+flatpickr("#flightDepartDate", { dateFormat: "d M Y", minDate: "today" });
+flatpickr("#flightArrivalDate", { dateFormat: "d M Y", minDate: "today" });
 
             // Auto-fetch departure city
             $('#departureCitySelect').on('change', function () {
@@ -1363,32 +1394,41 @@
 
                 // Customer Budget
                 let customerAmount = $('#customerBudgetAmount').val();
-                let customerCurrency = $('#customerBudgetCurrency').val();
-                let customerType = $('#customerBudgetType').val();
-                let flightIncluded = $('#customerFlightIncluded').val();
-                let budgetText = customerAmount ? `${customerCurrency} ${customerAmount} (${customerType === 'per_person' ? 'PER PERSON' : 'TOTAL'})${flightIncluded ? ` | FLIGHT: ${flightIncluded.toUpperCase()}` : ''}` : "—";
-                let ourBudgetTotal = calculateOurBudget();
-                let budgetLine = budgetText + (ourBudgetTotal ? ` (OUR ESTIMATE: ₹ ${ourBudgetTotal.toLocaleString()})` : "");
+let customerCurrency = $('#customerBudgetCurrency').val();
+let customerType = $('#customerBudgetType').val();
+let flightIncluded = $('#customerFlightIncluded').val();
+let budgetOfferedBy = $('#budgetOfferedBy').val();
 
+let budgetText = "";
+if (budgetOfferedBy === "CUSTOMER") {
+    budgetText = customerAmount ? `CUSTOMER BUDGET: ${customerCurrency} ${customerAmount} (${customerType === 'per_person' ? 'PER PERSON' : 'TOTAL BUDGET'})${flightIncluded ? ` | FLIGHT: ${flightIncluded.toUpperCase()}` : ''}` : "CUSTOMER BUDGET: NOT SPECIFIED";
+} else {
+    let ourBudgetTotal = calculateOurBudget();
+    budgetText = ourBudgetTotal ? `💰 ALIKE ESTIMATED BUDGET: ₹ ${ourBudgetTotal.toLocaleString()} (FOR ${$('#adultCount').val()} ADULTS + ${$('#childCount').val() || 0} CHILDREN, ${$('#hotelStarSelect').val()})` : "💰 ALIKE BUDGET: CALCULATING...";
+}
+
+let budgetLine = budgetText;
                 // Flight Status
                 let flightStatusSelect = $('#flightStatusSelect').val();
                 let flightText = "";
                 if (flightStatusSelect === 'BOOKED') {
-                    let depCity = $('#flightDepartureCity').val() || $('#departureCitySelect').val();
-                    let depHour = $('#departHour').val();
-                    let depMin = $('#departMinute').val();
-                    let depAmPm = $('#departAMPM').val();
-                    let destinations = $('#destSelect').val();
-                    let isMultiple = destinations && destinations.length > 1 && !destinations.includes('OTHERS');
-                    let arrCity = isMultiple ? $('#flightArrivalCitySelect').val() : $('#flightArrivalCity').val();
-                    if (!arrCity) arrCity = getDestination();
-                    let arrHour = $('#arrivalHour').val();
-                    let arrMin = $('#arrivalMinute').val();
-                    let arrAmPm = $('#arrivalAMPM').val();
-                    let departTime = (depHour && depMin && depAmPm) ? `${depHour}:${depMin} ${depAmPm}` : "TIME NOT SET";
-                    let arrivalTime = (arrHour && arrMin && arrAmPm) ? `${arrHour}:${arrMin} ${arrAmPm}` : "TIME NOT SET";
-                    flightText = `BOOKED (DEPART: ${depCity || "?"} AT ${departTime}) (ARRIVAL: ${arrCity || "?"} AT ${arrivalTime})`;
-                } else if (flightStatusSelect === 'NOT_BOOKED') {
+    let depCity = $('#flightDepartureCity').val() || $('#departureCitySelect').val();
+    let depDate = $('#flightDepartDate').val() || "DATE NOT SET";
+    let depHour = $('#departHour').val();
+    let depMin = $('#departMinute').val();
+    let depAmPm = $('#departAMPM').val();
+    let arrDate = $('#flightArrivalDate').val() || "DATE NOT SET";
+    let arrHour = $('#arrivalHour').val();
+    let arrMin = $('#arrivalMinute').val();
+    let arrAmPm = $('#arrivalAMPM').val();
+    let destinations = $('#destSelect').val();
+    let isMultiple = destinations && destinations.length > 1 && !destinations.includes('OTHERS');
+    let arrCity = isMultiple ? $('#flightArrivalCitySelect').val() : $('#flightArrivalCity').val();
+    if (!arrCity) arrCity = getDestination();
+    let departTime = (depHour && depMin && depAmPm) ? `${depHour}:${depMin} ${depAmPm}` : "TIME NOT SET";
+    let arrivalTime = (arrHour && arrMin && arrAmPm) ? `${arrHour}:${arrMin} ${arrAmPm}` : "TIME NOT SET";
+    flightText = `BOOKED (DEPART: ${depCity || "?"} ON ${depDate} AT ${departTime}) (ARRIVAL: ${arrCity || "?"} ON ${arrDate} AT ${arrivalTime})`;
+} else if (flightStatusSelect === 'NOT_BOOKED') {
                     flightText = `NOT BOOKED - WILL BOOK BY: ${$('#flightBookingDate').val() || "TBD"}`;
                 } else { flightText = "—"; }
 
@@ -1401,21 +1441,21 @@
                 let callback = getCallbackTime().toUpperCase();
                 let whatsapp = $('#whatsappInformed').val().toUpperCase();
 
-                return `destination: ${dest || "—"}\n` +
-                       `trip type: ${tripType || "—"}\n` +
-                       `number of travellers: ${travellers}\n` +
-                       `number of nights & days: ${nightsDays}\n` +
-                       `travel date(confirm the days and reason): ${travelRange}${reasonAdd}\n` +
-                       `hotel star- preferred no. of rooms: ${hotel}\n` +
-                       `budget(per/person+with flight or without flight): ${budgetLine}\n` +
-                       `flight booked or not: ${flightStat}\n` +
-                       `passport validity (6 months min): ${passport}\n` +
-                       `visa: ${visa}\n` +
-                       `departure city: ${departCity || "—"}\n` +
-                       `book by date(within 1 week): ${bookBy || "—"}\n` +
-                       `customer requirement: ${customerReq || "—"}\n` +
-                       `follow-up time by travel agent: ${callback}\n` +
-                       `informed about whatsapp: ${whatsapp}`;
+                return `DESTINATION: ${dest || "—"}\n` +
+       `TRIP TYPE: ${tripType || "—"}\n` +
+       `NUMBER OF TRAVELLERS: ${travellers}\n` +
+       `NUMBER OF NIGHTS & DAYS: ${nightsDays}\n` +
+       `TRAVEL DATE (CONFIRM THE DAYS AND REASON): ${travelRange}${reasonAdd}\n` +
+       `HOTEL STAR - PREFERRED NO. OF ROOMS: ${hotel}\n` +
+       `BUDGET (PER/PERSON+WITH FLIGHT OR WITHOUT FLIGHT): ${budgetLine}\n` +
+       `FLIGHT BOOKED OR NOT: ${flightStat}\n` +
+       `PASSPORT VALIDITY (6 MONTHS MIN): ${passport}\n` +
+       `VISA: ${visa}\n` +
+       `DEPARTURE CITY: ${departCity || "—"}\n` +
+       `BOOK BY DATE (WITHIN 1 WEEK): ${bookBy || "—"}\n` +
+       `CUSTOMER REQUIREMENT: ${customerReq || "—"}\n` +
+       `FOLLOW-UP TIME BY TRAVEL AGENT: ${callback}\n` +
+       `INFORMED ABOUT WHATSAPP: ${whatsapp}`;
             }
 
             function generateDealName() {
@@ -1451,7 +1491,10 @@
             $('#copyNotationBtn').on('click', copyFull);
 
             function resetAll() {
-                $('#hotelStarSelect').val('3 Star');
+                // Add to resetAll function:
+$('#flightDepartDate, #flightArrivalDate').val('');
+$('#budgetOfferedBy').val('');
+                $('#hotelStarSelect').val('');
                 $('#hotel4StarConfirm, #hotel5StarConfirm').hide();
                 $('#flightArrivalCitySelect').val('').trigger('change');
                 $('#flightArrivalCity').val('');
@@ -1465,22 +1508,22 @@
                 $('#customDestination').hide().val('');
                 $('#adultCount').val('0');
                 $('#childCount').val('0').trigger('change');
-                $('#daysSelect').val('5');
-                $('#travelConfirmSelect').val('YES'); toggleTravelSections();
+                $('#daysSelect').val('');
+                $('#travelConfirmSelect').val(''); toggleTravelSections();
                 $('#startDatePicker, #tentativeStartPicker, #tentativeReason, #bookByDatePicker, #customerReq').val('');
-                $('#hotelStarSelect').val('4 Star');
-                $('#roomCountSelect').val('1');
+                $('#hotelStarSelect').val('');
+                $('#roomCountSelect').val('');
                 $('#departureCitySelect').val('').trigger('change');
-                $('#passportValiditySelect').val('YES');
-                $('#visaStatusSelect').val('Yes available');
+                $('#passportValiditySelect').val('');
+                $('#visaStatusSelect').val('');
                 $('#flightStatusSelect').val('');
                 $('#flightBookedDetails, #flightNotBookedDetails').hide();
                 $('#departHour, #departMinute, #departAMPM, #arrivalHour, #arrivalMinute, #arrivalAMPM').val('');
                 $('#flightDepartureCity, #flightArrivalCity, #flightBookingDate').val('');
-                $('#callbackPreset').val('Available right now');
+                $('#callbackPreset').val('');
                 $('#customTimePicker').hide();
-                $('#callbackHour, #callbackMinute, #callbackAMPM').val('');
-                $('#whatsappInformed').val('No');
+                $('#callbackHour, #callbackMinute, #callbackAMPM').val('AM');
+                $('#whatsappInformed').val('');
                 $('#notationOutput').empty();
                 $('#dealNameDisplay').text('DEAL NAME: —');
                 calculateOurBudget();
