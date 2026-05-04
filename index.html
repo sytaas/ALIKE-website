@@ -61,7 +61,7 @@
             <div class="form-panel">
                 <div class="form-header">
                     <h2>Alike Travels · Premium Notation Tool</h2>
-                    <p>Multiple destinations · Auto nights · Child ages · Capital output</p>
+                    <p>For personal use</p>
                 </div>
                 <div class="form-body">
                     <!-- DESTINATION -->
@@ -846,14 +846,14 @@
                     <div class="input-group"><label>INFORMED ABOUT WHATSAPP</label><select id="whatsappInformed"><option></option><option value="No">No</option><option value="Yes">Yes</option></select></div>
 
                     <div class="button-group">
-                        <button class="btn-generate" id="generateBtn">GENERATE NOTATION (ALL CAPS)</button>
+                        <button class="btn-generate" id="generateBtn">GENERATE NOTATION</button>
                         <button class="btn-reset" id="resetBtn">RESET</button>
                     </div>
                 </div>
             </div>
 
             <div class="output-panel">
-                <div class="output-header"><h3>Customer Notation (UPPERCASE)</h3><p>Copy ready format</p></div>
+                <div class="output-header"><h3>Customer Notation</h3><p>Copy ready format</p></div>
                 <div class="notation-box" id="notationOutput"></div>
                 <div class="deal-name-area" id="dealNameDisplay">DEAL NAME: —</div>
                 <button class="copy-btn" id="copyNotationBtn">COPY FULL NOTATION</button>
@@ -973,7 +973,14 @@
         let years = $(`.childYears${i}`).val();
         let months = $(`.childMonths${i}`).val();
         let ageMonths = (parseInt(years) || 0) * 12 + (parseInt(months) || 0);
-        let percentage = ageMonths < 24 ? 0.25 : (ageMonths < 48 ? 0.50 : 1.0);
+        let percentage;
+if (ageMonths < 24) {
+    percentage = 0.25;        // 1y0m to 1y11m
+} else if (ageMonths <= 36) {
+    percentage = 0.50;        // 2y0m to 3y0m
+} else {
+    percentage = 1.00;        // 3y1m and above (3y1m, 4y, 5y, 6y... sab)
+}
         let childCost = perDayRate * totalDays * percentage;
         childCost = Math.round(childCost / 500) * 500;
         totalChildCost += childCost;
