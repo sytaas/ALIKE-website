@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">a
     <title>Alike Travels · Premium Notation Tool</title>
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -843,7 +843,7 @@
     <input type="text" id="callbackInput" placeholder="e.g., available right now, between 10:00-10:30 am">
 </div>
 
-                    <div class="input-group"><label>INFORMED ABOUT WHATSAPP</label><select id="whatsappInformed"><option></option><option value="No">No</option><option value="Yes">Yes</option></select></div>
+                
 
                     <div class="button-group">
                         <button class="btn-generate" id="generateBtn">GENERATE NOTATION</button>
@@ -968,23 +968,26 @@
     }
     
     // Child cost calculation based on age
-    let totalChildCost = 0;
-    for (let i = 1; i <= childrenCount; i++) {
-        let years = $(`.childYears${i}`).val();
-        let months = $(`.childMonths${i}`).val();
-        let ageMonths = (parseInt(years) || 0) * 12 + (parseInt(months) || 0);
-        let percentage;
-if (ageMonths < 24) {
-    percentage = 0.25;        // 1y0m to 1y11m
-} else if (ageMonths <= 36) {
-    percentage = 0.50;        // 2y0m to 3y0m
-} else {
-    percentage = 1.00;        // 3y1m and above (3y1m, 4y, 5y, 6y... sab)
-}
-        let childCost = perDayRate * totalDays * percentage;
-        childCost = Math.round(childCost / 500) * 500;
-        totalChildCost += childCost;
+   // Child cost calculation based on age
+let totalChildCost = 0;
+for (let i = 1; i <= childrenCount; i++) {
+    let years = $(`.childYears${i}`).val();
+    let months = $(`.childMonths${i}`).val();
+    let ageMonths = (parseInt(years) || 0) * 12 + (parseInt(months) || 0);
+    let percentage;
+    
+    if (ageMonths < 24) {
+        percentage = 0.25;        // < 2 years: 25%
+    } else if (ageMonths >= 24 && ageMonths <= 36) {
+        percentage = 0.50;        // 2 to 3 years (24-36 months): 50%
+    } else {
+        percentage = 1.00;        // > 3 years (37+ months): 100%
     }
+    
+    let childCost = perDayRate * totalDays * percentage;
+    childCost = Math.round(childCost / 500) * 500;
+    totalChildCost += childCost;
+}
     
     let adultTotal = adults * perDayRate * totalDays;
     let totalBudget = adultTotal + totalChildCost + hotelUpgrade;
@@ -1277,21 +1280,51 @@ function getBudgetLine() {
     return ourBudgetTotal ? `₹ ${ourBudgetTotal.toLocaleString()} overall excluding flights` : "calculating...";
 }
 }
-            function generateDealName() {
-                let mainDest = getDestination().split(",")[0].trim().replace(/[^\w\s]/g, '') || "TRIP";
-                let adults = $('#adultCount').val();
-                let children = $('#childCount').val();
-                let travellerCode = adults + "A" + (children !== "0" && children > 0 ? children + "C" : "");
-                let nightsDays = getNightsDays();
-                let travelRange = getTravelDateRange();
-                if (travelRange === "DATE NOT SET") travelRange = "";
-                let parts = [mainDest];
-                if (travellerCode && travellerCode !== "0A") parts.push(`(${travellerCode})`);
-                if (nightsDays) parts.push(nightsDays);
-                if (travelRange) parts.push(travelRange.replace(/-/g, '/'));
-                return parts.join("-").toUpperCase();
-            }
-
+       function generateDealName() {
+    let selectedDests = $('#destSelect').val();
+    let mainCountry = "TRIP";
+    
+    if (selectedDests && selectedDests.length > 0) {
+        let firstDest = selectedDests[0];
+        // Thailand ke liye sirf "THAILAND" show karo
+        if (firstDest.includes("Thailand")) {
+            mainCountry = "THAILAND";
+        } 
+        // Baaki destinations ke liye normal name
+        else if (firstDest === "Dubai") mainCountry = "DUBAI";
+        else if (firstDest === "Abu Dhabi") mainCountry = "ABU DHABI";
+        else if (firstDest === "Singapore") mainCountry = "SINGAPORE";
+        else if (firstDest === "Malaysia") mainCountry = "MALAYSIA";
+        else if (firstDest === "Vietnam") mainCountry = "VIETNAM";
+        else if (firstDest === "Bali") mainCountry = "BALI";
+        else if (firstDest === "Sri Lanka") mainCountry = "SRI LANKA";
+        else if (firstDest === "Qatar") mainCountry = "QATAR";
+        else if (firstDest === "Yas Island") mainCountry = "YAS ISLAND";
+        else if (firstDest === "OTHERS") {
+            let custom = $('#customDestination').val();
+            mainCountry = custom ? custom.toUpperCase() : "CUSTOM";
+        }
+        else mainCountry = firstDest.toUpperCase();
+    }
+    
+    let adults = $('#adultCount').val();
+    let children = $('#childCount').val();
+    let travellerCode = adults + "A" + (children !== "0" && children > 0 ? children + "C" : "");
+    
+    let days = parseInt($('#daysSelect').val());
+    let nights = days ? days - 1 : 0;
+    let nightsDays = nights + "N" + days + "D";
+    
+    let travelRange = getTravelDateRange();
+    if (travelRange === "date not set") travelRange = "";
+    
+    let parts = [mainCountry];
+    if (travellerCode && travellerCode !== "0A") parts.push(`(${travellerCode})`);
+    if (nightsDays) parts.push(nightsDays);
+    if (travelRange) parts.push(travelRange.replace(/-/g, '/'));
+    
+    return parts.join("-").toUpperCase();
+}
             function updateDisplay() {
                 $('#notationOutput').text(generateNotation());
                 $('#dealNameDisplay').text(`DEAL NAME: ${generateDealName()}`);
@@ -1335,7 +1368,6 @@ function resetAll() {
     $('#visaStatusInput').val('');
     $('#flightStatusInput').val('');
     $('#callbackInput').val('');
-    $('#whatsappInformed').val('');
     $('#notationOutput').empty();
     $('#dealNameDisplay').text('deal name: —');
     calculateOurBudget();
