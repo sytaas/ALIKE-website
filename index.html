@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">a
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>Alike Travels · Premium Notation Tool</title>
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -853,7 +853,13 @@
             </div>
 
             <div class="output-panel">
-                <div class="output-header"><h3>Customer Notation</h3><p>Copy ready format</p></div>
+                <div class="output-header"><h3>Customer Notation</h3><p>Copy ready format</p></div> <!-- Thailand Attraction Button -->
+<div id="thailandAttractionBtn" style="display: none; margin: 0 1.2rem 0.5rem 1.2rem;">
+    <a href="https://sytaas.github.io/Alike-Country-Info/" target="_blank" 
+       style="display: inline-block; background: #2b7a62; color: white; padding: 0.5rem 1rem; border-radius: 2rem; text-decoration: none; font-weight: 600; font-size: 0.8rem;">
+        🌴 View & Pitch Thailand Attraction Points
+    </a>
+</div>
                 <div class="notation-box" id="notationOutput"></div>
                 <div class="deal-name-area" id="dealNameDisplay">DEAL NAME: —</div>
                 <button class="copy-btn" id="copyNotationBtn">COPY FULL NOTATION</button>
@@ -864,18 +870,18 @@
 
     <script>
         $(document).ready(function () {
-            // Budget Reference Data
-            const budgetData = {
-                "Thailand (Phuket & Krabi)": { "4N5D": 42500, "9N10D": 87500 },
-                "Thailand (Bangkok & Pattaya)": { "4N5D": 37500, "9N10D": 77500 },
-                "Malaysia": { "4N5D": 42500, "6N7D": 62500 },
-                "Singapore": { "4N5D": 70000, "5N6D": 77500 },
-                "Vietnam": { "4N5D": 42500, "5N6D": 50000, "9N10D": 92500 },
-                "Sri Lanka": { "5N6D": 57500 },
-                "Dubai": { "4N5D": 52500 },
-                "Abu Dhabi": { "4N5D": 62500 },
-                "Bali": { "4N5D": 32500 }
-            };
+            // Budget Reference Data - UPDATED with correct Bangkok & Pattaya pricing
+const budgetData = {
+    "Thailand (Phuket & Krabi)": { "4N5D": 42500, "9N10D": 87500 },
+    "Thailand (Bangkok & Pattaya)": { "4N5D": 60000, "9N10D": 77500 },
+    "Malaysia": { "4N5D": 42500, "6N7D": 62500 },
+    "Singapore": { "4N5D": 70000, "5N6D": 77500 },
+    "Vietnam": { "4N5D": 42500, "5N6D": 50000, "9N10D": 92500 },
+    "Sri Lanka": { "5N6D": 57500 },
+    "Dubai": { "4N5D": 52500 },
+    "Abu Dhabi": { "4N5D": 62500 },
+    "Bali": { "4N5D": 32500 }
+};
 
             function getPerDayRate(destination, nightsDays) {
                 let destKey = Object.keys(budgetData).find(key => destination.includes(key));
@@ -911,6 +917,26 @@
         $('#totalOurBudget').text('—');
         return 0;
     }
+
+    // Show Thailand attraction button when Thailand is selected
+function updateThailandButton() {
+    let destinations = $('#destSelect').val() || [];
+    let isThailand = destinations.some(d => d.includes("Thailand"));
+    if (isThailand) {
+        $('#thailandAttractionBtn').show();
+    } else {
+        $('#thailandAttractionBtn').hide();
+    }
+}
+
+// Call on destination change
+$('#destSelect').on('change', function() {
+    updateThailandButton();
+    // ... rest of existing code (custom destination, generateDestinationDays, etc.)
+});
+
+// Call on page load
+updateThailandButton();
     
     // Per day rates for each destination
     const perDayRates = {
@@ -919,7 +945,7 @@
         "Singapore": 14000,
         "Malaysia": 8500,
         "Thailand (Phuket & Krabi)": 8500,
-        "Thailand (Bangkok & Pattaya)": 7500,
+        "Thailand (Bangkok & Pattaya)": 12000, 
         "Vietnam": 8500,
         "Bali": 6500,
         "Sri Lanka": 11500,
@@ -1003,7 +1029,49 @@ for (let i = 1; i <= childrenCount; i++) {
             $('.searchable-dropdown').select2({ width: '100%', placeholder: 'Search or select' });
             
             // Flatpickr calendars
-           flatpickr("#travelDatePicker", { dateFormat: "d M Y", minDate: "today" });
+           // Flatpickr with Singapore 20-day rule & Bali next-month restriction
+flatpickr("#travelDatePicker", {
+    dateFormat: "d M Y",
+    minDate: "today",
+    onReady: function(selectedDates, dateStr, instance) {
+        validateTravelDate(instance);
+    },
+    onChange: function(selectedDates, dateStr, instance) {
+        validateTravelDate(instance);
+        calculateOurBudget();
+    }
+});
+
+function validateTravelDate(instance) {
+    let selectedDate = instance.selectedDates[0];
+    if (!selectedDate) return;
+    
+    let destinations = $('#destSelect').val() || [];
+    let isSingapore = destinations.some(d => d === "Singapore");
+    let isBali = destinations.some(d => d === "Bali");
+    let today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    // Singapore: minimum 20 days gap
+    if (isSingapore) {
+        let minSingaporeDate = new Date(today);
+        minSingaporeDate.setDate(today.getDate() + 20);
+        if (selectedDate < minSingaporeDate) {
+            alert("⚠️ Singapore Deals require minimum 20 days gap before qualifying. Please select a date at least 20 days from today.");
+            instance.clear();
+            return;
+        }
+    }
+    
+    // Bali: cannot be in the same month
+    if (isBali) {
+        if (selectedDate.getMonth() === today.getMonth() && selectedDate.getFullYear() === today.getFullYear()) {
+            alert("⚠️ Bali deals cannot be qualified in the same month. Please select a date in the next month or later.");
+            instance.clear();
+            return;
+        }
+    }
+}
             // flatpickr("#bookByDatePicker", { dateFormat: "d M Y", minDate: "today", maxDate: new Date().fp_incr(14) });
             // Add these to existing flatpickr initializations
 
@@ -1197,7 +1265,7 @@ function generateNotation() {
     if (!$('#destSelect').val() || $('#destSelect').val().length === 0) missingFields.push("destination");
     if (!$('#tripType').val()) missingFields.push("trip type");
     if ($('#adultCount').val() === "0" && $('#childCount').val() === "0") missingFields.push("travellers");
-    if (!$('#departureCitySelect').val()) missingFields.push("departure city");
+    // REMOVED departure city from missing fields - it's optional now
 
     if (missingFields.length > 0) {
         $('#notationOutput').html(`<span style="color: #ff6b6b; font-weight: bold; white-space: pre-wrap;">⚠️ kindly fill all information ⚠️\n\nmissing fields:\n- ${missingFields.join("\n- ")}</span>`);
@@ -1232,27 +1300,30 @@ function generateNotation() {
     let nightsDays = getMultiDestNightsDays().toLowerCase();
     let travelRange = getTravelDateRange().toLowerCase();
     let hotel = getHotelPref().toLowerCase();
-    let departCity = toLower($('#departureCitySelect').val());
     
-    // FIXED: Changed from bookByDatePicker to bookByDateInput
+    // FIXED: Only show departure city if actually selected (not default/empty)
+    let departCityRaw = $('#departureCitySelect').val();
+    let departCity = '';
+    if (departCityRaw && departCityRaw !== 'Port Blair' && departCityRaw !== 'Select City' && departCityRaw !== '') {
+        departCity = toLower(departCityRaw);
+    }
+    
     let bookBy = $('#bookByDateInput').val() ? $('#bookByDateInput').val().toLowerCase() : '';
-    
     let passportVal = $('#passportValidityInput').val() || '';
     let visaStatus = $('#visaStatusInput').val() || '';
     let flightStatus = $('#flightStatusInput').val() || '';
     let callbackTime = $('#callbackInput').val() || '';
     let customerRequirement = $('#customerReq').val() || '';
-    
     let budgetLine = getBudgetLine().toLowerCase();
     
     let outputLines = [];
     
     if (dest) outputLines.push(dest);
     if (travellers) outputLines.push(travellers);
-    if (nightsDays) outputLines.push(nightsDays);
-    if (travelRange) outputLines.push(travelRange);
-    if (hotel) outputLines.push(hotel);
-    if (budgetLine) outputLines.push(budgetLine);
+    if (nightsDays && nightsDays !== '0n0d' && nightsDays !== 'nan') outputLines.push(nightsDays);
+    if (travelRange && travelRange !== 'date not set') outputLines.push(travelRange);
+    if (hotel && hotel !== '*/ rooms' && hotel !== '*/undefined rooms') outputLines.push(hotel);
+    if (budgetLine && budgetLine !== 'calculating...') outputLines.push(budgetLine);
     if (flightStatus) outputLines.push(`flight: ${flightStatus}`);
     if (passportVal) outputLines.push(`passport: ${passportVal}`);
     if (visaStatus) outputLines.push(`visa: ${visaStatus}`);
@@ -1262,8 +1333,7 @@ function generateNotation() {
     if (callbackTime) outputLines.push(`callback time preference from TA: ${callbackTime}`);
     
     return outputLines.join('\n');
-}function toLower(str) { return (str || "").toString().trim().toLowerCase(); }
-
+}
 // New function to get budget line (extracted from previous generateNotation)
 function getBudgetLine() {
     let customerAmount = $('#customerBudgetAmount').val();
