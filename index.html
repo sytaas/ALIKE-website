@@ -10,48 +10,440 @@
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background: linear-gradient(135deg, #eef2f7 0%, #d4dfe9 100%); font-family: 'Inter', system-ui, sans-serif; padding: 2rem 1.5rem; color: #1a2c3e; min-height: 100vh; display: flex; flex-direction: column; }
-        .container { max-width: 1500px; margin: 0 auto; flex: 1; width: 100%; }
-        .builder-wrapper { display: flex; flex-wrap: wrap; gap: 2rem; justify-content: center; }
-        .form-panel { flex: 1.4; min-width: 380px; background: #ffffff; border-radius: 2rem; box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.2); overflow: hidden; }
-        .form-header { background: #0f3b2c; padding: 1.2rem 2rem; color: white; }
-        .form-header h2 { font-weight: 600; font-size: 1.5rem; }
-        .form-body { padding: 1.8rem 2rem 2rem; max-height: 70vh; overflow-y: auto; }
-        .input-group { margin-bottom: 1.2rem; display: flex; flex-direction: column; gap: 0.4rem; }
-        .input-group label { font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.4px; color: #2c5a4a; }
-        .input-group input, .input-group select, .input-group textarea { padding: 0.7rem 1rem; border: 1.5px solid #e2e8f0; border-radius: 1.2rem; font-size: 0.9rem; font-family: inherit; background: #fefefe; }
-        .row-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-        .child-age-row { background: #f8fafc; padding: 0.8rem; border-radius: 1.2rem; margin-top: 0.5rem; }
-        .btn-generate { background: #0f3b2c; color: white; border: none; padding: 0.85rem 1.5rem; font-weight: 600; border-radius: 2rem; cursor: pointer; }
-        .btn-reset { background: #5e6e66; color: white; border: none; padding: 0.85rem 1.2rem; font-weight: 600; border-radius: 2rem; cursor: pointer; }
-        .output-panel { flex: 1; min-width: 420px; background: #1e2a32; border-radius: 2rem; display: flex; flex-direction: column; overflow: hidden; }
-        .output-header { background: #0b2b22; padding: 1rem 1.8rem; color: #f0f9f4; }
-      .notation-box { 
-    background: #0f1a1f; 
+    <style>* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body { 
+    background: #0f0f12; 
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif; 
+    padding: 2rem 1.5rem; 
+    color: #e4e4e7; 
+    min-height: 100vh; 
+    display: flex; 
+    flex-direction: column; 
+}
+
+.container { max-width: 1500px; margin: 0 auto; flex: 1; width: 100%; }
+.builder-wrapper { display: flex; flex-wrap: wrap; gap: 2rem; justify-content: center; }
+
+/* Form Panel */
+.form-panel { 
+    flex: 1.4; 
+    min-width: 380px; 
+    background: #18181b; 
+    border-radius: 1.5rem; 
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4); 
+    overflow: hidden; 
+}
+
+.form-header { 
+    background: #1a1a1f; 
+    padding: 1.2rem 2rem; 
+    border-bottom: 1px solid #2a2a30;
+}
+.form-header h2 { font-weight: 600; font-size: 1.4rem; color: #d4d4d8; }
+.form-header p { font-size: 0.75rem; color: #71717a; }
+
+.form-body { 
+    padding: 1.8rem 2rem 2rem; 
+    max-height: 70vh; 
+    overflow-y: auto; 
+    scrollbar-width: thin;
+    scrollbar-color: #3f3f46 #27272a;
+}
+.form-body::-webkit-scrollbar { width: 6px; }
+.form-body::-webkit-scrollbar-track { background: #27272a; border-radius: 10px; }
+.form-body::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 10px; }
+
+.input-group { margin-bottom: 1.2rem; display: flex; flex-direction: column; gap: 0.4rem; }
+.input-group label { 
+    font-weight: 600; 
+    font-size: 0.7rem; 
+    text-transform: uppercase; 
+    letter-spacing: 0.5px; 
+    color: #a1a1aa; 
+}
+.input-group input, .input-group select, .input-group textarea { 
+    padding: 0.7rem 1rem; 
+    border: 1px solid #27272a; 
+    border-radius: 1rem; 
+    font-size: 0.9rem; 
+    font-family: inherit; 
+    background: #0f0f12; 
+    color: #e4e4e7;
+    transition: all 0.2s ease;
+}
+.input-group input:focus, .input-group select:focus, .input-group textarea:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+.input-group input::placeholder, .input-group textarea::placeholder {
+    color: #52525b;
+}
+
+.row-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.child-age-row { background: #0f0f12; padding: 0.8rem; border-radius: 1rem; margin-top: 0.5rem; border: 1px solid #27272a; }
+
+.btn-generate { 
+    background: #2563eb; 
+    color: white; 
+    border: none; 
+    padding: 0.85rem 1.5rem; 
+    font-weight: 500; 
+    border-radius: 1rem; 
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.btn-generate:hover { 
+    background: #1d4ed8;
+}
+
+.btn-reset { 
+    background: #27272a; 
+    color: #a1a1aa; 
+    border: none; 
+    padding: 0.85rem 1.2rem; 
+    font-weight: 500; 
+    border-radius: 1rem; 
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.btn-reset:hover { 
+    background: #3f3f46;
+    color: #e4e4e7;
+}
+
+.output-panel { 
+    flex: 1; 
+    min-width: 420px; 
+    background: #18181b; 
+    border-radius: 1.5rem; 
+    display: flex; 
+    flex-direction: column; 
+    overflow: hidden;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+.output-header { 
+    background: #1a1a1f; 
+    padding: 1rem 1.8rem; 
+    border-bottom: 1px solid #2a2a30;
+}
+.output-header h3 { color: #d4d4d8; font-weight: 500; }
+.output-header p { color: #71717a; font-size: 0.7rem; }
+
+.notation-box { 
+    background: #0f0f12; 
     padding: 1.4rem; 
     margin: 1.2rem; 
-    border-radius: 1.5rem; 
-    font-family: 'Courier New', monospace; 
-    font-size: 0.85rem; 
-    line-height: 1.5; 
-    color: #cde5db; 
+    border-radius: 1rem; 
+    font-family: 'Fira Code', 'Courier New', monospace; 
+    font-size: 0.82rem; 
+    line-height: 1.6; 
+    color: #a1a1aa; 
     white-space: pre-wrap; 
-    border: 1px solid #2e5a4a; 
+    border: 1px solid #27272a; 
     max-height: 520px; 
     overflow-y: auto; 
-    text-transform: lowercase; /* Add this */
-} .copy-btn { background: #2b7a62; border: none; color: white; padding: 0.6rem 1.2rem; margin: 0 1.2rem 1rem auto; border-radius: 2rem; font-weight: 600; cursor: pointer; width: fit-content; }
-        .deal-name-area { margin: 0 1.2rem 0.5rem 1.2rem; background: #00000030; border-radius: 1rem; padding: 0.7rem 1rem; font-family: monospace; font-weight: bold; color: #c3f2e2; border-left: 4px solid #51b48b; }
-        .footer-credit { text-align: center; margin-top: 2rem; padding: 1rem; font-family: monospace; font-size: 0.85rem; color: #1e3b2f; border-top: 1px dashed #5e8b7a; user-select: none; pointer-events: none; }
-        .select2-container--default .select2-selection--multiple { border-radius: 1.2rem; border-color: #e2e8f0; }
-        small.hint { font-size: 0.7rem; color: #4b6e5e; }
-        .button-group { display: flex; gap: 1rem; margin-top: 1rem; }
-        .budget-calc-section { background: #f0f7f4; border-radius: 1.5rem; padding: 1rem; margin-top: 1rem; border: 1px solid #c8e0d6; }
-        .budget-row { display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; border-bottom: 1px dashed #c8e0d6; }
-        .budget-label { font-weight: 600; font-size: 0.75rem; color: #1a5c48; }
-        .budget-value { font-weight: 700; font-size: 0.9rem; color: #0f3b2c; }
+    scrollbar-width: thin;
+}
+.notation-box::-webkit-scrollbar { width: 5px; }
+.notation-box::-webkit-scrollbar-track { background: #1a1a1f; border-radius: 10px; }
+.notation-box::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 10px; }
+
+.copy-btn { 
+    background: #2563eb; 
+    border: none; 
+    color: white; 
+    padding: 0.6rem 1.2rem; 
+    margin: 0 1.2rem 1rem auto; 
+    border-radius: 1rem; 
+    font-weight: 500; 
+    cursor: pointer; 
+    width: fit-content;
+    transition: all 0.2s ease;
+}
+.copy-btn:hover {
+    background: #1d4ed8;
+}
+
+.deal-name-wrapper { display: flex; align-items: center; gap: 0.5rem; margin: 0 1.2rem 0.5rem 1.2rem; }
+.deal-name-area { 
+    background: #0f0f12; 
+    border-radius: 1rem; 
+    padding: 0.7rem 1rem; 
+    font-family: monospace; 
+    font-weight: 500; 
+    font-size: 0.75rem;
+    color: #a1a1aa; 
+    border-left: 3px solid #3b82f6; 
+    flex: 1; 
+}
+.copy-deal-btn { 
+    background: #27272a; 
+    border: none; 
+    color: #a1a1aa; 
+    padding: 0.4rem 1rem; 
+    border-radius: 1rem; 
+    font-weight: 500; 
+    cursor: pointer; 
+    font-size: 0.7rem; 
+    white-space: nowrap;
+    transition: all 0.2s ease;
+}
+.copy-deal-btn:hover { background: #3f3f46; color: #e4e4e7; }
+
+.footer-credit { 
+    text-align: center; 
+    margin-top: 2rem; 
+    padding: 1rem; 
+    font-family: monospace; 
+    font-size: 0.7rem; 
+    color: #52525b; 
+}
+
+.select2-container--default .select2-selection--multiple { 
+    border-radius: 1rem; 
+    border-color: #27272a !important; 
+    background: #0f0f12 !important;
+}
+.select2-container--default .select2-selection--multiple .select2-selection__choice {
+    background-color: #2563eb;
+    color: white;
+    border: none;
+}
+.select2-dropdown {
+    background: #18181b;
+    border-color: #27272a;
+}
+.select2-container--default .select2-results__option--highlighted.select2-results__option--selectable {
+    background-color: #2563eb;
+}
+.select2-container--default .select2-search--dropdown .select2-search__field {
+    background: #0f0f12;
+    border-color: #27272a;
+    color: #e4e4e7;
+}
+
+small.hint { font-size: 0.65rem; color: #52525b; }
+.button-group { display: flex; gap: 1rem; margin-top: 1rem; }
+
+.budget-calc-section { 
+    background: #0f0f12; 
+    border-radius: 1rem; 
+    padding: 1rem; 
+    margin-top: 1rem; 
+    border: 1px solid #27272a; 
+}
+.budget-row { display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; border-bottom: 1px solid #27272a; }
+.budget-label { font-weight: 500; font-size: 0.7rem; color: #71717a; }
+.budget-value { font-weight: 600; font-size: 0.85rem; color: #d4d4d8; }
+
+.flight-check-btn { 
+    background: #27272a; 
+    border: none; 
+    color: #a1a1aa; 
+    padding: 0.6rem 1.2rem; 
+    border-radius: 1rem; 
+    font-weight: 500; 
+    cursor: pointer; 
+    width: fit-content; 
+    margin: 0 1.2rem 0.5rem auto; 
+    display: inline-block; 
+    text-decoration: none; 
+    font-size: 0.8rem;
+    transition: all 0.2s ease;
+}
+.flight-check-btn:hover { 
+    background: #3f3f46;
+    color: #e4e4e7;
+}
+
+/* ========== THEME SWITCHER STYLES ========== */
+.theme-switcher-wrapper {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 1rem;
+    padding: 0 0.5rem;
+}
+
+.theme-selector {
+    background: #27272a;
+    border: 1px solid #3f3f46;
+    border-radius: 2rem;
+    padding: 0.4rem 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.theme-selector select {
+    background: transparent;
+    border: none;
+    color: #e4e4e7;
+    font-size: 0.8rem;
+    font-weight: 500;
+    padding: 0.2rem 0.5rem;
+    cursor: pointer;
+    outline: none;
+}
+
+.theme-selector select option {
+    background: #18181b;
+    color: #e4e4e7;
+}
+
+.theme-selector:hover {
+    background: #3f3f46;
+}
+
+/* Light Theme Override (when active) */
+body.light-theme {
+    background: linear-gradient(135deg, #eef2f7 0%, #d4dfe9 100%);
+    color: #1a2c3e;
+}
+
+body.light-theme .form-panel {
+    background: #ffffff;
+}
+
+body.light-theme .form-header {
+    background: #0f3b2c;
+}
+
+body.light-theme .form-header h2,
+body.light-theme .form-header p {
+    color: white;
+}
+
+body.light-theme .input-group label {
+    color: #2c5a4a;
+}
+
+body.light-theme .input-group input,
+body.light-theme .input-group select,
+body.light-theme .input-group textarea {
+    background: #fefefe;
+    border-color: #e2e8f0;
+    color: #1a2c3e;
+}
+
+body.light-theme .child-age-row {
+    background: #f8fafc;
+    border-color: #e2e8f0;
+}
+
+body.light-theme .btn-generate {
+    background: #0f3b2c;
+}
+
+body.light-theme .btn-reset {
+    background: #5e6e66;
+    color: white;
+}
+
+body.light-theme .output-panel {
+    background: #1e2a32;
+}
+
+body.light-theme .output-header {
+    background: #0b2b22;
+}
+
+body.light-theme .notation-box {
+    background: #0f1a1f;
+    color: #cde5db;
+    border-color: #2e5a4a;
+}
+
+body.light-theme .deal-name-area {
+    background: #00000030;
+    color: #c3f2e2;
+    border-left-color: #51b48b;
+}
+
+body.light-theme .budget-calc-section {
+    background: #f0f7f4;
+    border-color: #c8e0d6;
+}
+
+body.light-theme .budget-row {
+    border-bottom-color: #c8e0d6;
+}
+
+body.light-theme .budget-label {
+    color: #1a5c48;
+}
+
+body.light-theme .budget-value {
+    color: #0f3b2c;
+}
+
+body.light-theme .flight-check-btn {
+    background: #e2e8f0;
+    color: #1a2c3e;
+}
+
+body.light-theme .flight-check-btn:hover {
+    background: #cbd5e1;
+}
+
+body.light-theme .copy-btn {
+    background: #2b7a62;
+}
+
+body.light-theme .copy-deal-btn {
+    background: #e2e8f0;
+    color: #1a2c3e;
+}
+
+body.light-theme .copy-deal-btn:hover {
+    background: #cbd5e1;
+}
+
+body.light-theme .footer-credit {
+    color: #1e3b2f;
+    border-top-color: #5e8b7a;
+}
+
+body.light-theme .select2-container--default .select2-selection--multiple {
+    background: #fefefe !important;
+    border-color: #e2e8f0 !important;
+}
+
+body.light-theme .select2-dropdown {
+    background: white;
+    border-color: #e2e8f0;
+}
+
+body.light-theme .select2-container--default .select2-search--dropdown .select2-search__field {
+    background: #fefefe;
+    border-color: #e2e8f0;
+    color: #1a2c3e;
+}
+
+body.light-theme .select2-container--default .select2-results__option {
+    color: #1a2c3e;
+}
+
+body.light-theme .theme-selector {
+    background: #e2e8f0;
+    border-color: #cbd5e1;
+}
+
+body.light-theme .theme-selector select {
+    color: #1a2c3e;
+}
+
+body.light-theme .theme-selector select option {
+    background: white;
+    color: #1a2c3e;
+}
+
+body.light-theme .theme-selector:hover {
+    background: #cbd5e1;
+}
     </style>
 </head>
 
@@ -60,8 +452,23 @@
         <div class="builder-wrapper">
             <div class="form-panel">
                 <div class="form-header">
-                    <h2>Alike Travels · Premium Notation Tool</h2>
-                    <p>For personal use</p>
+                   <!-- Theme Switcher - Place this inside .form-header after <h2> -->
+<div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+    <div>
+        <h2 style="margin: 0;">Alike Travels · Premium Notation Tool</h2>
+        <p style="margin: 0.2rem 0 0 0;">For personal use</p>
+    </div>
+    <div class="theme-switcher-wrapper" style="margin: 0; padding: 0;">
+        <div class="theme-selector">
+            <span>🎨</span>
+            <select id="themeSelect">
+                <option value="dark">🌙 Dark Theme</option>
+                <option value="light">☀️ Light Theme</option>
+            </select>
+        </div>
+    </div>
+</div>
+                    
                 </div>
                 <div class="form-body">
                     <!-- DESTINATION -->
@@ -144,14 +551,9 @@
                     <!-- NIGHTS & DAYS -->
                     <div class="input-group">
                         <label>DAYS OF TRIP</label>
-                        <select id="daysSelect">
-                            <option> </option>
-                            <option value="1">1 Day</option><option value="2">2 Days</option><option value="3">3 Days</option>
-                            <option value="4">4 Days</option><option value="5">5 Days</option><option value="6">6 Days</option>
-                            <option value="7">7 Days</option><option value="8">8 Days</option><option value="9">9 Days</option>
-                            <option value="10">10 Days</option><option value="11">11 Days</option><option value="12">12 Days</option>
-                            <option value="13">13 Days</option><option value="14">14 Days</option>
-                        </select>
+                       <select id="daysSelect">
+    <option value="">Select Days</option>
+</select>
                         <small class="hint">Nights will be days-1 automatically</small>
                     </div>
 
@@ -200,26 +602,12 @@
                             <label>💰 OUR BUDGET (AUTO-CALCULATED)</label>
                         </div>
                         <div id="ourBudgetDisplay">
+                            
                             <div class="budget-row"><span class="budget-label">Base Package:</span><span class="budget-value" id="baseBudget">—</span></div>
                             <div class="budget-row"><span class="budget-label">Hotel Upgrade:</span><span class="budget-value" id="hotelUpgradeBudget">—</span></div>
                             <div class="budget-row"><span class="budget-label">Child Cost:</span><span class="budget-value" id="childBudget">—</span></div>
+                            <div class="budget-row"><span class="budget-label">⚠️ Urgent Buffer (≤25 days):</span><span class="budget-value" id="urgentBuffer" style="color:#e67e22;">—</span></div>
                             <div class="budget-row" style="border-bottom: 2px solid #0f3b2c;"><span class="budget-label"><strong>TOTAL OUR BUDGET:</strong></span><span class="budget-value" id="totalOurBudget" style="font-size: 1rem;">—</span></div>
-                        </div>
-                        
-                        <!-- Hotel Upgrade Confirmation (4 Star) -->
-                        <div id="hotel4StarConfirm" style="display:none; margin-top: 0.8rem;">
-                            <div class="input-group">
-                                <label>INFORMED ABOUT INCREMENT OF AMOUNT IN OVERALL BUDGET FOR HOTEL UPGRADE</label>
-                                <select id="hotel4StarInformed"><option value="">Select</option><option value="Yes">Yes</option><option value="No">No</option></select>
-                            </div>
-                        </div>
-                        
-                        <!-- Hotel Upgrade Confirmation (5 Star) -->
-                        <div id="hotel5StarConfirm" style="display:none; margin-top: 0.8rem;">
-                            <div class="input-group">
-                                <label>INFORMED ABOUT INCREMENT OF 20K IN OVERALL BUDGET FOR 5 STAR HOTEL</label>
-                                <select id="hotel5StarInformed"><option value="">Select</option><option value="Yes">Yes</option><option value="No">No</option></select>
-                            </div>
                         </div>
                     </div>
                     
@@ -818,6 +1206,8 @@
   <input type="text" id="customDepartureCity" placeholder="Enter your departure city manually" style="display:none; margin-top:8px;">
 </div>
 
+<button class="flight-check-btn" id="flightCheckBtn">✈️ Check Flight Rates on MMT</button>
+
 <!-- PASSPORT VALIDITY -->
 <div class="input-group"><label>PASSPORT VALIDITY (6 MONTHS MIN)</label><input type="text" id="passportValidityInput" placeholder="e.g., yes, valid until Dec 2025"></div>
 
@@ -831,7 +1221,7 @@
 
                     
                     <!-- CUSTOMER REQUIREMENT -->
-                    <div class="input-group"><label>CUSTOMER REQUIREMENT</label><textarea id="customerReq" placeholder="kids activities, shopping"></textarea></div>
+                    <div class="input-group"><label>ADDITIONAL NOTE</label><textarea id="customerReq" placeholder="Any special requests, preferences, or additional notes..."></textarea></div>
                     <!-- BOOK BY DATE -->
                     <div class="input-group">
     <label>BOOK BY DATE</label>
@@ -861,7 +1251,10 @@
     </a>
 </div>
                 <div class="notation-box" id="notationOutput"></div>
-                <div class="deal-name-area" id="dealNameDisplay">DEAL NAME: —</div>
+                <div class="deal-name-wrapper">
+    <div class="deal-name-area" id="dealNameDisplay">DEAL NAME: —</div>
+    <button class="copy-deal-btn" id="copyDealBtn">📋 Copy Deal</button>
+</div>
                 <button class="copy-btn" id="copyNotationBtn">COPY FULL NOTATION</button>
             </div>
         </div>
@@ -870,14 +1263,114 @@
 
     <script>
         $(document).ready(function () {
+
+        // Real-time update for Trip Type changes (Solo traveller extra)
+$('#tripType').on('change', function() {
+    calculateOurBudget();
+    updateDisplay();  // Also update notation if needed
+});
+// Real-time updates for all budget-affecting fields
+$('#tripType, #adultCount, #childCount, #daysSelect, #hotelStarSelect, #travelDatePicker').on('change', function() {
+    calculateOurBudget();
+    updateDisplay();
+});
+
+// Also update when child ages change
+$(document).on('change', '[class^="childYears"], [class^="childMonths"]', function() {
+    calculateOurBudget();
+    updateDisplay();
+});
+
+// Also update when destination changes
+$('#destSelect').on('change', function() {
+    calculateOurBudget();
+    updateDisplay();
+});
+
+        // Copy only deal name
+$('#copyDealBtn').on('click', function() {
+    let dealNameText = $('#dealNameDisplay').text();
+    // Remove "DEAL NAME: " prefix if present
+    let dealName = dealNameText.replace('DEAL NAME: ', '').trim();
+    
+    if (dealName && dealName !== '—') {
+        navigator.clipboard.writeText(dealName).then(function() {
+            $('#copyDealBtn').text('✓ Copied!');
+            setTimeout(() => $('#copyDealBtn').text('📋 Copy Deal'), 2000);
+        }).catch(function() {
+            alert('Failed to copy');
+        });
+    } else {
+        alert('No deal name to copy. Please generate notation first.');
+    }
+});
+
+        // Destination package mapping based on your chart
+const destinationPackages = {
+    "Thailand (Phuket & Krabi)": [5, 7],  // 4N5D (5 days), 6N7D (7 days)
+    "Thailand (Bangkok & Pattaya)": [5, 7, 10],  // 4N5D (5 days), 6N7D (7 days), 9N10D (10 days)
+    "Malaysia": [5, 7],  // 4N5D (5 days), 6N7D (7 days)
+    "Singapore": [5, 6],  // 4N5D (5 days), 5N6D (6 days)
+    "Vietnam": [5, 6, 10],  // 5N6D (6 days), 9N10D (10 days)
+    "Sri Lanka": [6],  // 4N5D (5 days), 5N6D (6 days)
+    "Dubai": [5],  // 4N5D (5 days)
+    "Abu Dhabi": [5],  // 4N5D (5 days)
+    "Bali": [5],  // 4N5D (5 days)
+    "Qatar": [5],  // default
+    "Yas Island": [5]  // default
+};
+
+function updateDaysDropdown() {
+    let destinations = $('#destSelect').val();
+    if (!destinations || destinations.length === 0) {
+        $('#daysSelect').html('<option value="">Select Days</option>');
+        $('#daysSelect').prop('disabled', true);
+        return;
+    }
+    
+    // Get the first selected destination
+    let firstDest = destinations[0];
+    let availableDays = [];
+    
+    // Check if destination has predefined packages
+    if (destinationPackages[firstDest]) {
+        availableDays = destinationPackages[firstDest];
+    } else if (firstDest === "OTHERS") {
+        // For custom destinations, allow 3-14 days
+        availableDays = [3,4,5,6,7,8,9,10,11,12,13,14];
+    } else {
+        // Default for any other destination
+        availableDays = [4,5,6,7,8,9,10];
+    }
+    
+    // Sort days in ascending order
+    availableDays.sort((a,b) => a - b);
+    
+    // Build dropdown options
+    let options = '<option value="">Select Days</option>';
+    for (let days of availableDays) {
+        let nights = days - 1;
+        let label = `${days} Day${days > 1 ? 's' : ''} (${nights}N/${days}D)`;
+        options += `<option value="${days}">${label}</option>`;
+    }
+    
+    $('#daysSelect').html(options);
+    $('#daysSelect').prop('disabled', false);
+    
+    // Auto-select first available option if nothing selected
+    if (!$('#daysSelect').val() && availableDays.length > 0) {
+        $('#daysSelect').val(availableDays[0]);
+    }
+}
             // Budget Reference Data - UPDATED with correct Bangkok & Pattaya pricing
+// Updated Budget Reference Data
 const budgetData = {
-    "Thailand (Phuket & Krabi)": { "4N5D": 42500, "9N10D": 87500 },
-    "Thailand (Bangkok & Pattaya)": { "4N5D": 60000, "9N10D": 77500 },
+    "Thailand (Phuket & Krabi)": { "4N5D": 42500, "6N7D": 52500, "9N10D": 87500 },
+    "Thailand (Bangkok & Pattaya)": { "4N5D": 60000, "6N7D": 84000, "9N10D": 120000 },
     "Malaysia": { "4N5D": 42500, "6N7D": 62500 },
-    "Singapore": { "4N5D": 70000, "5N6D": 77500 },
-    "Vietnam": { "4N5D": 42500, "5N6D": 50000, "9N10D": 92500 },
-    "Sri Lanka": { "5N6D": 57500 },
+    "Singapore": { "4N5D": 75000, "5N6D": 87500 },
+    "Vietnam": { "4N5D": 47500, "5N6D": 67500, "9N10D": 97500 },
+    "Sri Lanka": { "4N5D": 47500, "5N6D": 57500 },
     "Dubai": { "4N5D": 52500 },
     "Abu Dhabi": { "4N5D": 62500 },
     "Bali": { "4N5D": 32500 }
@@ -908,125 +1401,141 @@ const budgetData = {
                 return (days - 1) + "N" + days + "D";
             }
 
-           function calculateOurBudget() {
+function calculateOurBudget() {
     let destinations = $('#destSelect').val();
     if (!destinations || destinations.length === 0) {
         $('#baseBudget').html('—');
         $('#hotelUpgradeBudget').text('—');
         $('#childBudget').text('—');
+        $('#urgentBuffer').text('—');
         $('#totalOurBudget').text('—');
+        $('#soloExtraRow').remove();
         return 0;
     }
 
-    // Show Thailand attraction button when Thailand is selected
-function updateThailandButton() {
-    let destinations = $('#destSelect').val() || [];
-    let isThailand = destinations.some(d => d.includes("Thailand"));
-    if (isThailand) {
-        $('#thailandAttractionBtn').show();
-    } else {
-        $('#thailandAttractionBtn').hide();
-    }
-}
-
-// Call on destination change
-$('#destSelect').on('change', function() {
-    updateThailandButton();
-    // ... rest of existing code (custom destination, generateDestinationDays, etc.)
-});
-
-// Call on page load
-updateThailandButton();
-    
-    // Per day rates for each destination
-    const perDayRates = {
-        "Dubai": 10500,
-        "Abu Dhabi": 12500,
-        "Singapore": 14000,
-        "Malaysia": 8500,
-        "Thailand (Phuket & Krabi)": 8500,
-        "Thailand (Bangkok & Pattaya)": 12000, 
-        "Vietnam": 8500,
-        "Bali": 6500,
-        "Sri Lanka": 11500,
-        "Qatar": 9000,
-        "Yas Island": 11000
-    };
-    const DEFAULT_RATE = 8000;
-    
-    let hotelStar = $('#hotelStarSelect').val();
-    let hotelUpgrade = hotelStar === '4 Star' ? 10000 : (hotelStar === '5 Star' ? 20000 : 0);
-    
+    let totalDays = parseInt($('#daysSelect').val()) || 5;
     let adults = parseInt($('#adultCount').val()) || 0;
     let childrenCount = parseInt($('#childCount').val()) || 0;
-    let totalDays = parseInt($('#daysSelect').val()) || 5;
+    let hotelStar = $('#hotelStarSelect').val();
+    let tripType = $('#tripType').val();
     
-    let isMultiple = destinations.length > 1 && !destinations.includes('OTHERS');
-    let perDayRate = DEFAULT_RATE;
-    let rateSource = "";
-    
-    if (!isMultiple) {
-        let mainDest = destinations[0];
-        if (mainDest === 'OTHERS') mainDest = $('#customDestination').val() || 'CUSTOM';
-        
-        for (let key in perDayRates) {
-            if (mainDest.includes(key) || key.includes(mainDest)) {
-                perDayRate = perDayRates[key];
-                rateSource = key;
-                break;
-            }
-        }
-        $('#baseBudget').html(`${mainDest.toUpperCase()}: ₹${perDayRate.toLocaleString()}/day/person × ${totalDays} days = ₹${(perDayRate * totalDays).toLocaleString()}/adult`);
-    } else {
-        let totalRate = 0;
-        for (let i = 0; i < destinations.length; i++) {
-            let days = parseInt($(`.destDays_${i}`).val()) || 0;
-            if (days > 0) {
-                let rate = DEFAULT_RATE;
-                for (let key in perDayRates) {
-                    if (destinations[i].includes(key)) { rate = perDayRates[key]; break; }
-                }
-                totalRate += rate * days;
-            }
-        }
-        perDayRate = totalRate / totalDays;
-        $('#baseBudget').html(`Multiple destinations: Avg ₹${Math.round(perDayRate).toLocaleString()}/day/person`);
+    let hotelUpgrade = 0;
+    if (hotelStar === '4 Star') {
+        hotelUpgrade = 15000;
+    } else if (hotelStar === '5 Star') {
+        hotelUpgrade = 20000;
     }
+   let perDayRate = 8000;
+let mainDest = destinations[0];
+
+// Updated per day rates based on your chart
+if (mainDest.includes("Phuket") || mainDest.includes("Krabi")) {
+    perDayRate = 8500;  // 42.5K for 5 days ~8500/day
+}
+else if (mainDest.includes("Bangkok") || mainDest.includes("Pattaya")) {
+    perDayRate = 7500;  // 37.5K for 5 days ~7500/day
+}
+else if (mainDest === "Dubai") {
+    perDayRate = 10500; // 52.5K for 5 days ~10500/day
+}
+else if (mainDest === "Abu Dhabi") {
+    perDayRate = 12500; // 62.5K for 5 days ~12500/day
+}
+else if (mainDest === "Singapore") {
+    perDayRate = 15000; // 75K for 5 days ~15000/day
+}
+else if (mainDest === "Malaysia") {
+    perDayRate = 8500;  // 42.5K for 5 days ~8500/day
+}
+else if (mainDest === "Vietnam") {
+    perDayRate = 11000; // 65K for 6 days ~10833/day
+}
+else if (mainDest === "Bali") {
+    perDayRate = 6500;  // 32.5K for 5 days ~6500/day
+}
+else if (mainDest === "Sri Lanka") {
+    perDayRate = 9500;  // 47.5K for 5 days ~9500/day
+}
+else if (mainDest === "Qatar") {
+    perDayRate = 11000;
+}
+else if (mainDest === "Yas Island") {
+    perDayRate = 13000;
+}
+    let adultTotal = adults * perDayRate * totalDays;
     
-    // Child cost calculation based on age
-   // Child cost calculation based on age
-let totalChildCost = 0;
-for (let i = 1; i <= childrenCount; i++) {
-    let years = $(`.childYears${i}`).val();
-    let months = $(`.childMonths${i}`).val();
-    let ageMonths = (parseInt(years) || 0) * 12 + (parseInt(months) || 0);
-    let percentage;
-    
-    if (ageMonths < 24) {
-        percentage = 0.25;        // < 2 years: 25%
-    } else if (ageMonths >= 24 && ageMonths <= 36) {
-        percentage = 0.50;        // 2 to 3 years (24-36 months): 50%
-    } else {
-        percentage = 1.00;        // > 3 years (37+ months): 100%
-    }
-    
-    let childCost = perDayRate * totalDays * percentage;
-    childCost = Math.round(childCost / 500) * 500;
-    totalChildCost += childCost;
+   // Solo traveller extra ₹10,000 - using existing adults variable
+let soloExtra = 0;
+if (tripType === 'Solo' && adults === 1) {
+    soloExtra = 10000;
 }
     
-    let adultTotal = adults * perDayRate * totalDays;
-    let totalBudget = adultTotal + totalChildCost + hotelUpgrade;
+    let totalChildCost = 0;
+    let childrenBelow2 = 0;
+    let children2to3 = 0;
+    let childrenAbove3 = 0;
+    
+    for (let i = 1; i <= childrenCount; i++) {
+        let years = $(`.childYears${i}`).val();
+        let months = $(`.childMonths${i}`).val();
+        let ageMonths = (parseInt(years) || 0) * 12 + (parseInt(months) || 0);
+        
+        if (ageMonths < 24) {
+            childrenBelow2++;
+            totalChildCost += 5000;
+        } else if (ageMonths >= 24 && ageMonths <= 36) {
+            children2to3++;
+            totalChildCost += (perDayRate * totalDays * 0.5);
+        } else {
+            childrenAbove3++;
+            totalChildCost += (perDayRate * totalDays);
+        }
+    }
+    
+    let urgentBuffer = 0;
+    let travelDateStr = $('#travelDatePicker').val();
+    if (travelDateStr) {
+        let travelDate = new Date(travelDateStr);
+        let today = new Date();
+        let diffDays = Math.ceil((travelDate - today) / (1000 * 60 * 60 * 24));
+        if (diffDays > 0 && diffDays <= 25) {
+            urgentBuffer = 22500;
+        }
+    }
+    
+    let totalBudget = adultTotal + totalChildCost + hotelUpgrade + urgentBuffer + soloExtra;
     totalBudget = Math.round(totalBudget);
     
+    $('#baseBudget').html(`₹ ${Math.round(adultTotal).toLocaleString()}`);
     $('#hotelUpgradeBudget').text(hotelUpgrade > 0 ? `₹ ${hotelUpgrade.toLocaleString()} (${hotelStar})` : '— (3 Star)');
-    $('#childBudget').text(childrenCount > 0 ? `₹ ${Math.round(totalChildCost).toLocaleString()}` : '—');
+    
+    let childText = '';
+    if (childrenBelow2 > 0) childText += `${childrenBelow2} child<2yrs (flight+visa only) `;
+    if (children2to3 > 0) childText += `${children2to3} child 2-3yrs (50%) `;
+    if (childrenAbove3 > 0) childText += `${childrenAbove3} child >3yrs (100%)`;
+    $('#childBudget').html(childrenCount > 0 ? `₹ ${Math.round(totalChildCost).toLocaleString()} (${childText.trim()})` : '—');
+    
+    $('#urgentBuffer').text(urgentBuffer > 0 ? `₹ ${urgentBuffer.toLocaleString()} (WITHIN 25 DAYS)` : '—');
+    
+   if (soloExtra > 0) {
+    if ($('#soloExtraRow').length === 0) {
+        $('#ourBudgetDisplay').append(`
+            <div class="budget-row" id="soloExtraRow">
+                <span class="budget-label">🧑 Solo Traveller Extra:</span>
+                <span class="budget-value" id="soloExtraValue" style="color:#e67e22;">—</span>
+            </div>
+        `);
+    }
+    $('#soloExtraValue').text(`₹ ${soloExtra.toLocaleString()}`);
+} else {
+    $('#soloExtraRow').remove();  // This removes the row when solo is not selected
+}
+    
     $('#totalOurBudget').text(`₹ ${totalBudget.toLocaleString()}`);
     
     return totalBudget;
 }
-            // Initialize Select2
-            $('.searchable-dropdown').select2({ width: '100%', placeholder: 'Search or select' });
+$('.searchable-dropdown').select2({ width: '100%', placeholder: 'Search or select' });
             
             // Flatpickr calendars
            // Flatpickr with Singapore 20-day rule & Bali next-month restriction
@@ -1101,12 +1610,12 @@ function validateTravelDate(instance) {
     });
         
 
-           $('#destSelect').on('change', function () {
+          $('#destSelect').on('change', function () {
     let selected = $(this).val();
     if (selected && selected.includes('OTHERS')) $('#customDestination').show();
     else $('#customDestination').hide();
-    // Remove this line: updateArrivalCity();
     generateDestinationDays();
+    updateDaysDropdown();  // Add this line
     calculateOurBudget();
 });
 
@@ -1154,17 +1663,18 @@ function validateTravelDate(instance) {
             }
 
             function getMultiDestNightsDays() {
-                let destinations = $('#destSelect').val();
-                if (destinations && destinations.length > 1 && !destinations.includes('OTHERS')) {
-                    let result = [];
-                    for (let i = 0; i < destinations.length; i++) {
-                        let days = parseInt($(`.destDays_${i}`).val() || 0);
-                        if (days > 0) result.push(`${destinations[i].toUpperCase()}: ${days - 1}N${days}D`);
-                    }
-                    return result.length ? result.join(" | ") : getNightsDays();
-                }
-                return getNightsDays();
-            }
+    let destinations = $('#destSelect').val();
+    if (destinations && destinations.length > 1 && !destinations.includes('OTHERS')) {
+        let totalDays = parseInt($('#daysSelect').val());
+        if (isNaN(totalDays) || totalDays === 0) return "";
+        let nights = totalDays - 1;
+        return nights + "N" + totalDays + "D";
+    }
+    let days = parseInt($('#daysSelect').val());
+    if (isNaN(days) || days === 0) return "";
+    let nights = days - 1;
+    return nights + "N" + days + "D";
+}
 
             function getTravellerString() {
                 let adults = parseInt($('#adultCount').val());
@@ -1192,8 +1702,7 @@ function validateTravelDate(instance) {
                 } else if (tripTypeText) travStr += " (" + tripTypeText + ")";
                 return travStr;
             }
-
-           function getTravelDateRange() {
+function getTravelDateRange() {
     let nights = parseInt($('#daysSelect').val()) - 1;
     let startRaw = $('#travelDatePicker').val();
     if (!startRaw) return "date not set";
@@ -1201,7 +1710,11 @@ function validateTravelDate(instance) {
     if (isNaN(startDate.getTime())) return startRaw.toLowerCase();
     let endDate = new Date(startDate);
     endDate.setDate(startDate.getDate() + nights);
-    let formatDate = (d) => d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }).replace(/ /g, '').toLowerCase();
+    let formatDate = (d) => {
+        let day = d.getDate();
+        let month = d.toLocaleString('en-GB', { month: 'short' }).toLowerCase();
+        return `${day}${month}`;
+    };
     return `${formatDate(startDate)}-${formatDate(endDate)}`;
 }
          
@@ -1251,25 +1764,20 @@ function validateTravelDate(instance) {
             $('#daysSelect').on('change', function () { generateDestinationDays(); calculateOurBudget(); });
             
             $('#hotelStarSelect').on('change', function() {
-                let star = $(this).val();
-                $('#hotel4StarConfirm').toggle(star === '4 Star');
-                $('#hotel5StarConfirm').toggle(star === '5 Star');
-                calculateOurBudget();
-            });
+    calculateOurBudget();
+});
 
             $('#adultCount, #customerBudgetAmount, #customerBudgetType').on('change input', function() { calculateOurBudget(); });
             $(document).on('change', '[class^="childYears"], [class^="childMonths"]', function() { calculateOurBudget(); });
-
 function generateNotation() {
     let missingFields = [];
     if (!$('#destSelect').val() || $('#destSelect').val().length === 0) missingFields.push("destination");
     if (!$('#tripType').val()) missingFields.push("trip type");
     if ($('#adultCount').val() === "0" && $('#childCount').val() === "0") missingFields.push("travellers");
-    // REMOVED departure city from missing fields - it's optional now
 
     if (missingFields.length > 0) {
-        $('#notationOutput').html(`<span style="color: #ff6b6b; font-weight: bold; white-space: pre-wrap;">⚠️ kindly fill all information ⚠️\n\nmissing fields:\n- ${missingFields.join("\n- ")}</span>`);
-        $('#dealNameDisplay').text('deal name: —');
+        $('#notationOutput').text(`⚠️ KINDLY FILL ALL INFORMATION ⚠️\n\nMISSING FIELDS:\n- ${missingFields.join("\n- ")}`);
+        $('#dealNameDisplay').text('DEAL NAME: —');
         return;
     }
 
@@ -1279,42 +1787,80 @@ function generateNotation() {
     let adults = parseInt($('#adultCount').val()) || 0;
     let childrenCount = parseInt($('#childCount').val()) || 0;
     let travellers = adults + "a";
+    
     if (childrenCount > 0) {
         travellers += childrenCount + "c";
         let childAges = [];
         for (let i = 1; i <= childrenCount; i++) {
             let years = $(`.childYears${i}`).val();
             let months = $(`.childMonths${i}`).val();
-            let ageStr = "";
-            if (years && months) ageStr = `${years}y${months}m`;
-            else if (years) ageStr = `${years}y`;
-            else if (months) ageStr = `${months}m`;
-            if (ageStr) childAges.push(ageStr);
+            
+            // ONLY show if actual age data exists
+            if (years || months) {
+                let ageMonths = (parseInt(years) || 0) * 12 + (parseInt(months) || 0);
+                let ageStr = "";
+                
+                if (years && months) ageStr = `${years}y${months}m`;
+                else if (years) ageStr = `${years}y`;
+                else if (months) ageStr = `${months}m`;
+                
+                if (ageMonths >= 24 && ageMonths <= 36) {
+                    ageStr = `${years || 0}y`; // Sirf years dikhao, months nahi
+                } else if (ageMonths < 24) {
+                    ageStr = `${years || 0}y (infant)`;
+                } else if (ageMonths > 36) {
+                    ageStr = `${years}y`;
+                }
+                
+                if (ageStr && !ageStr.includes('null') && !ageStr.includes('undefined')) {
+                    childAges.push(ageStr);
+                }
+            }
         }
-        if (childAges.length) travellers += ` (${childAges.join(", ")})`;
+        if (childAges.length) {
+            travellers += ` (${childAges.join(", ")})`;
+        }
     }
     if (tripTypeVal && tripTypeVal !== "family") {
         travellers += ` (${tripTypeVal})`;
     }
     
     let nightsDays = getMultiDestNightsDays().toLowerCase();
-    let travelRange = getTravelDateRange().toLowerCase();
-    let hotel = getHotelPref().toLowerCase();
+    let travelRangeRaw = getTravelDateRange().toLowerCase();
     
-    // FIXED: Only show departure city if actually selected (not default/empty)
+    // Check urgent travel and add buffer note IN THE DATE LINE
+    let urgentBufferText = '';
+    let travelDateStr = $('#travelDatePicker').val();
+    let diffDays = 0;
+    if (travelDateStr) {
+        let travelDate = new Date(travelDateStr);
+        let today = new Date();
+        diffDays = Math.ceil((travelDate - today) / (1000 * 60 * 60 * 24));
+        if (diffDays > 0 && diffDays <= 25) {
+            urgentBufferText = ` (+₹20-25k buffer added due to close travel date)`;
+        }
+    }
+    
+    let travelRange = travelRangeRaw + urgentBufferText;
+    
+    let hotel = getHotelPref().toLowerCase();
+    let budgetLine = getBudgetLine().toLowerCase();
+    
     let departCityRaw = $('#departureCitySelect').val();
     let departCity = '';
     if (departCityRaw && departCityRaw !== 'Port Blair' && departCityRaw !== 'Select City' && departCityRaw !== '') {
-        departCity = toLower(departCityRaw);
+        departCity = departCityRaw.toLowerCase();
     }
     
     let bookBy = $('#bookByDateInput').val() ? $('#bookByDateInput').val().toLowerCase() : '';
+    
+    // Passport - sirf value dikhao, extra text nahi
     let passportVal = $('#passportValidityInput').val() || '';
+    
     let visaStatus = $('#visaStatusInput').val() || '';
     let flightStatus = $('#flightStatusInput').val() || '';
     let callbackTime = $('#callbackInput').val() || '';
     let customerRequirement = $('#customerReq').val() || '';
-    let budgetLine = getBudgetLine().toLowerCase();
     
     let outputLines = [];
     
@@ -1329,12 +1875,13 @@ function generateNotation() {
     if (visaStatus) outputLines.push(`visa: ${visaStatus}`);
     if (departCity) outputLines.push(`departure city: ${departCity}`);
     if (bookBy) outputLines.push(`book by date: ${bookBy}`);
-    if (customerRequirement) outputLines.push(`customer requirement: ${customerRequirement}`);
-    if (callbackTime) outputLines.push(`callback time preference from TA: ${callbackTime}`);
+    if (customerRequirement) outputLines.push(`additional note: ${customerRequirement}`);
+    if (callbackTime) outputLines.push(`callback time preference from ta: ${callbackTime}`);
+    
+    // NO visa note - remove completely
     
     return outputLines.join('\n');
 }
-// New function to get budget line (extracted from previous generateNotation)
 function getBudgetLine() {
     let customerAmount = $('#customerBudgetAmount').val();
     let customerCurrency = $('#customerBudgetCurrency').val();
@@ -1400,7 +1947,10 @@ function getBudgetLine() {
                 $('#dealNameDisplay').text(`DEAL NAME: ${generateDealName()}`);
             }
 
-            $('#generateBtn').on('click', function (e) { e.preventDefault(); updateDisplay(); });
+           $('#generateBtn').off('click').on('click', function(e) { 
+    e.preventDefault(); 
+    updateDisplay(); 
+});
 
             async function copyFull() {
                 let full = generateNotation() + "\n\nDEAL NAME: " + generateDealName();
@@ -1424,7 +1974,7 @@ function resetAll() {
     $('#customDestination').hide().val('');
     $('#adultCount').val('0');
     $('#childCount').val('0').trigger('change');
-    $('#daysSelect').val('');
+    $('#daysSelect').val('').trigger('change');
     
     // Updated: Sirf travelDatePicker clear karo
     $('#travelDatePicker').val('');
@@ -1444,7 +1994,76 @@ function resetAll() {
 }
 
 $('#resetBtn').on('click', resetAll);           calculateOurBudget();
-        });
+$('#flightCheckBtn').on('click', function() {
+    let departureCity = '';
+    let customDep = $('#customDepartureCity').val();
+    let selectedDep = $('#departureCitySelect').val();
+    
+    if (customDep && customDep.trim() !== '') {
+        departureCity = customDep.trim();
+    } else if (selectedDep && selectedDep !== 'OTHERS' && selectedDep !== 'Select City' && selectedDep !== 'Port Blair') {
+        departureCity = selectedDep;
+    }
+    
+    let destinations = $('#destSelect').val();
+    let destinationCity = '';
+    if (destinations && destinations.length > 0) {
+        let firstDest = destinations[0];
+        if (firstDest === 'Dubai') destinationCity = 'Dubai';
+        else if (firstDest === 'Abu Dhabi') destinationCity = 'Abu Dhabi';
+        else if (firstDest === 'Singapore') destinationCity = 'Singapore';
+        else if (firstDest === 'Malaysia') destinationCity = 'Kuala Lumpur';
+        else if (firstDest === 'Vietnam') destinationCity = 'Ho Chi Minh City';
+        else if (firstDest === 'Bali') destinationCity = 'Bali';
+        else if (firstDest === 'Sri Lanka') destinationCity = 'Colombo';
+        else if (firstDest === 'Qatar') destinationCity = 'Doha';
+        else if (firstDest === 'Thailand (Phuket & Krabi)') destinationCity = 'Phuket';
+        else if (firstDest === 'Thailand (Bangkok & Pattaya)') destinationCity = 'Bangkok';
+        else if (firstDest === 'Yas Island') destinationCity = 'Abu Dhabi';
+        else if (firstDest === 'OTHERS') {
+            let custom = $('#customDestination').val();
+            destinationCity = custom ? custom : '';
+        }
+        else destinationCity = firstDest;
+    }
+    
+    if (!departureCity) {
+        alert('⚠️ Please select DEPARTURE CITY first!');
+        return;
+    }
+    
+    if (!destinationCity) {
+        alert('⚠️ Please select DESTINATION first!');
+        return;
+    }
+    
+    // Open MMT flight search page (user will enter dates manually)
+    let mmtUrl = `https://www.makemytrip.com/flights/?from=${encodeURIComponent(departureCity)}&to=${encodeURIComponent(destinationCity)}`;
+    window.open(mmtUrl, '_blank');
+});
+// ========== THEME SWITCHER ==========
+// Load saved theme from localStorage
+const savedTheme = localStorage.getItem('alike_theme') || 'dark';
+if (savedTheme === 'light') {
+    $('body').addClass('light-theme');
+    $('#themeSelect').val('light');
+} else {
+    $('body').removeClass('light-theme');
+    $('#themeSelect').val('dark');
+}
+
+// Theme switcher event
+$('#themeSelect').on('change', function() {
+    const selectedTheme = $(this).val();
+    if (selectedTheme === 'light') {
+        $('body').addClass('light-theme');
+        localStorage.setItem('alike_theme', 'light');
+    } else {
+        $('body').removeClass('light-theme');
+        localStorage.setItem('alike_theme', 'dark');
+    }
+});
+});
     </script>
 </body>
 
